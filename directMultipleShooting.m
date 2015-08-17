@@ -97,7 +97,7 @@ function b = bolza(w,lagrange,mayer,x0,tf,N,intMethod,varargin)
 %   initial states X0, a final time TF, and number of sample N with the 
 %   integration method INT.
 %
-%   B = BOLZA(W,L,M,F,X0,TF,N,'given',MET) calculates the total cost based
+%   B = BOLZA(W,L,M,X0,TF,N,'given',MET) calculates the total cost based
 %   on given Bolza's formulation with given integration method MET.
 
 % Obtain guess X and U
@@ -165,12 +165,17 @@ dimInPathCon = size(inPathCon(XGuess(:,1),UGuess(:,1)),1);
 dimInTerCon = size(inTerCon(XGuess(:,end),tf),1);
 inCon = zeros(dimInPathCon*(N+1)+dimInTerCon+dimTF,1);
 
-% Path Constraint
+
 for i = 1:N,
-    eqCon(dimEqPathCon*(i-1)+1:dimEqPathCon*i,1) = eqPathCon(XGuess(:,i),UGuess(:,i));
+    
+    % Dynamic Constraint
     XSim = forwardSimulation(f,XGuess(:,i),UGuess(:,i),tf/N,1,intMethod,varargin{:});
     eqCon(dimEqPathCon*(N+1)+dimEqTerCon + n*(i-1)+1:dimEqPathCon*(N+1)+dimEqTerCon + n*i) = XGuess(:,i+1)-XSim(:,end);
+    
+    % Path Constraint
+    eqCon(dimEqPathCon*(i-1)+1:dimEqPathCon*i,1) = eqPathCon(XGuess(:,i),UGuess(:,i));
     inCon(dimInPathCon*(i-1)+1:dimInPathCon*i,1) = inPathCon(XGuess(:,i),UGuess(:,i));
+    
 end
 eqCon(dimEqPathCon*N+1:dimEqPathCon*(N+1),1) = eqPathCon(XGuess(:,N+1),UGuess(:,N));
 
