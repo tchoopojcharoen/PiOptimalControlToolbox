@@ -1,4 +1,4 @@
-%% Exercise 1: directSingleShooting
+%% Bounded input directSingleShooting
 
 clear all;
 clc;

@@ -1,4 +1,4 @@
-function [X,U,t,J] = directSingleShooting(lagrange,mayer,f,eqPathCon,inPathCon,eqTerCon,inTerCon,x0,tf,N,m,intMethod,varargin)
+function [X,U,t,trajectory,J] = directSingleShooting(lagrange,mayer,f,eqPathCon,inPathCon,eqTerCon,inTerCon,x0,tf,N,m,intMethod,varargin)
 %DIRECTSINGLESHOOTING - solves a given optimal control problem using direct
 %single shooting method
 %   [X,U,T,J] = DIRECTSINGLESHOOTING(LAGRANGE,MAYER,F,EQPC,INPC,EQTC,INTC,X0,TF,N,M,INT)
@@ -84,6 +84,9 @@ end
 U = reshape(u_vector,length(u_vector)/N,N);
 
 [X,t,~] = forwardSimulation(f,x0,U,tf,N,intMethod,'plot');
+
+trajectory.X = piecewiseCubic(f,X,U,tf,N);
+trajectory.U = piecewiseLinear(U,tf,N);
 
 
 end

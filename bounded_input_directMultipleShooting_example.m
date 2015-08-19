@@ -1,4 +1,4 @@
-%% Exercise 1 (rk4): directSingleShooting
+%% Bounded input directMultipleShooting
 
 clear all;
 clc;
@@ -18,8 +18,8 @@ inTerCon = @(xN,tf)(0);
 
 x0 = [10;0];
 tf = 10;
-N = 40;
+N = 20;
 m = 1; % number of control input signal
 
 method = 'rk4';
-[X,U,t] = directSingleShooting(lagrange,mayer,f,eqPathCon,inPathCon,eqTerCon,inTerCon,x0,tf,N,m,method);
+[X,U,t,trajectory] = directMultipleShooting(lagrange,mayer,f,eqPathCon,inPathCon,eqTerCon,inTerCon,x0,tf,N,m,method);

@@ -1,19 +1,19 @@
 function [X,t,h] = forwardSimulation(f,x0,U,tf,N,intMethod,varargin)
 %FORWARDSIMULATION - forward simulate an IVP with given dynamic system and
 %specified method at equal time step
-%   [X,T] = FORWARDSIMULATION(F,X0,U,TF,N,INT) simulates a controlled 
-%   dynamic system F forward in time with given initial states X0, 
+%   [X,T] = FORWARDSIMULATION(F,X0,U,TF,N,INT) simulates a controlled
+%   dynamic system F forward in time with given initial states X0,
 %   a (m X N) control input trajectory, a final time TF, number of iterations N
 %   , and an integration method INT. The function return state trajectory X
 %   and time vector T.
 %
-%   [X,T] = FORWARDSIMULATION(F,X0,U,TF,N,'given',MET) simulates a controlled 
-%   dynamic system with the given integration method MET. 
+%   [X,T] = FORWARDSIMULATION(F,X0,U,TF,N,'given',MET) simulates a controlled
+%   dynamic system with the given integration method MET.
 %
 %   [X,T,H] = FORWARDSIMULATION(F,X0,U,TF,N,...,'plot') simulates the
 %   controlled dynamic system, plot state and control input
-%   trajectories, and return state trajectory X, time vector T, and plot 
-%   handle H. 
+%   trajectories, and return state trajectory X, time vector T, and plot
+%   handle H.
 
 %% validate attributes
 
@@ -106,30 +106,38 @@ end
 
 
 if doPlot
-    scrsz = get(groot,'ScreenSize');
-    % State Trajectory
-    figure('Position',[50 scrsz(4)/5 scrsz(3)/2-50 3*scrsz(4)/5],'Name','State Trajectory');
-    
-    labelY = cell(1,n);
-    for i = 1:n,
-        labelY{i} = sprintf('x_{%d}',i);
-    end
-    h1 = plotVector(t,X,'State Trajectory : x(t)','t : time',labelY);
-    
-    % Control Input Trajectory
-    figure('Position',[scrsz(3)/2 scrsz(4)/5 scrsz(3)/2-50 3*scrsz(4)/5],'Name','Control Input Trajectory');
-    
-    labelY = cell(1,n);
-    for i = 1:n,
-        labelY{i} = sprintf('u_{%d}',i);
-    end
-    h2 = plotVector(t(1:end-1),U,'Control Input Trajectory','t : time',labelY);
-    
-    h(1) = h1;
-    h(2) = h2;
-    
+    h = plotXU(t,X,U);
 else
     h = {};
 end
 
+end
+
+function h = plotXU(t,X,U)
+%PLOTXU - internal function : plots state and control input trajectories
+
+n = size(X,1);
+m = size(U,1);
+scrsz = get(groot,'ScreenSize');
+
+% State Trajectory
+figure('Position',[50 scrsz(4)/5 scrsz(3)/2-50 3*scrsz(4)/5],'Name','State Trajectory');
+
+labelY = cell(1,n);
+for i = 1:n,
+    labelY{i} = sprintf('x_{%d}',i);
+end
+h1 = plotVector(t,X,'State Trajectory : x(t)','t : time',labelY);
+
+% Control Input Trajectory
+figure('Position',[scrsz(3)/2 scrsz(4)/5 scrsz(3)/2-50 3*scrsz(4)/5],'Name','Control Input Trajectory');
+
+labelY = cell(1,m);
+for i = 1:m,
+    labelY{i} = sprintf('u_{%d}',i);
+end
+h2 = plotVector(t(1:end-1),U,'Control Input Trajectory','t : time',labelY);
+
+h(1) = h1;
+h(2) = h2;
 end
